@@ -43,7 +43,7 @@ public class BelieveService {
                         Не мешкай и выигрывай мерч ТестОпс, погнали!""");
     }
 
-    public SendMessage getBelieveQuestion(ChatUser user, boolean answeredInTime) {
+    public SendMessage getBelieveQuestion(ChatUser user) {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         rowsInline.add(List.of(
                 addInlineButton("✅ Верю", BELIEVE_TRUE),
@@ -55,15 +55,12 @@ public class BelieveService {
         message.setChatId(user.getChatId());
         user.setBelieveQuestionAskedTimestamp(System.currentTimeMillis());
         BelieveQuestion question = questionLoader.getBelieveQuestions().get(user.getBelieveQuestionId());
-        String messageText = answeredInTime
-                ? question.text()
-                : String.format("Прошло больше 15 секунд, вы не успели с ответом\n%s", question.text());//todo add normal text
-        message.setText(messageText);
+        message.setText(question.text());
         message.setReplyMarkup(inlineKeyboardMarkup);
         return message;
     }
 
-    public SendMessage checkAnswer(ChatUser user, boolean answer) {
+    public SendMessage checkAnswer(ChatUser user, boolean answer, boolean answeredInTime) {
         if (user.getBelieveQuestionScheduled()) {
             return getButtonsForLaterQuestion(user, false);
         }
@@ -72,7 +69,6 @@ public class BelieveService {
         }
         if (user.getBelieveQuestionAskedTimestamp() == 0)
             log.error("ACHTUNG!!!! user.getBelieveQuestionAskedTimestamp() == 0");
-        boolean answeredInTime = System.currentTimeMillis() - user.getBelieveQuestionAskedTimestamp() < 15000;
         BelieveQuestion question = questionLoader.getBelieveQuestions().get(user.getBelieveQuestionId());
         if (answeredInTime && question.correct().equals(answer)) {
             user.setBelieveScore(user.getBelieveScore() + 1);
@@ -91,7 +87,7 @@ public class BelieveService {
             chatUserRepository.save(user);
             return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("Спасибо за игру! Ваш результат %d из %d!", user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
         }
-        return getBelieveQuestion(user, answeredInTime);
+        return getBelieveQuestion(user);
     }
 
     private void scheduleSending(Long chatId) {

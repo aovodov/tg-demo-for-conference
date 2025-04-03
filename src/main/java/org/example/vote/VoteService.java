@@ -29,6 +29,7 @@ import static org.example.Constants.VOTE_TESTOPS_USER;
 import static org.example.utils.ButtonUtils.addBackButton;
 import static org.example.utils.ButtonUtils.addInlineButton;
 import static org.example.utils.ButtonUtils.addSubscribeButton;
+import static org.example.utils.WelcomeButtons.getWelcomeButtons;
 
 @Component
 @RequiredArgsConstructor
@@ -114,7 +115,7 @@ public class VoteService {
     @Transactional
     public SendMessage saveVoteResult(ChatUser user) {
         if (user.getVoteCounted()) {
-            return WelcomeButtons.getWelcomeButtons(user.getChatId(), null);
+            return getWelcomeButtons(user.getChatId(), null);
         }
         voteResultService.saveVoteResult(user);
         user.setVoteCounted(true);
@@ -130,16 +131,6 @@ public class VoteService {
         } else {
             messageText = "Спасибо за ответ! Чтобы оставаться в курсе событий, подписывайтесь на наш тг канал";
         }
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        rowsInline.add(List.of(
-                addSubscribeButton()
-        ));
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        inlineKeyboardMarkup.setKeyboard(rowsInline);
-        SendMessage message = new SendMessage();
-        message.setChatId(user.getChatId());
-        message.setText(messageText);
-        message.setReplyMarkup(inlineKeyboardMarkup);
-        return message;
+        return getWelcomeButtons(user.getChatId(), messageText);
     }
 }

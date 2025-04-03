@@ -37,7 +37,6 @@ dependencies {
     implementation("org.telegram:telegrambotsextensions:6.9.7.1")
 
     compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

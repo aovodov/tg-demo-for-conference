@@ -91,8 +91,9 @@ public class TelegramDemoBot extends TelegramWebhookBot {
             switch (callbackData) {
                 case WELCOME_QUIZ:
                     if (user.getQuizQuestionId() == -1) {
-                        removeMessage(chatId, messageId);
-                        return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("Спасибо за игру! Ваш результат %d из %d!", user.getQuizScore(), questionLoader.getQuizQuestions().size()));
+                        return new SendMessage(chatId.toString(),
+                                String.format("Спасибо за игру! Ваш результат %d из %d!",
+                                        user.getQuizScore(), questionLoader.getQuizQuestions().size()));
                     }
                     removeButtons(chatId, messageId);
                     return quizService.getInitActivityButtons(chatId);
@@ -100,16 +101,16 @@ public class TelegramDemoBot extends TelegramWebhookBot {
                     removeButtons(chatId, messageId);
                     return quizService.getQuizQuestion(user);
                 case QUIZ_ANSWER0:
-                    removeButtons(chatId, messageId);
+                    removeMessage(chatId, messageId);
                     return quizService.checkQuizAnswer(user, 0);
                 case QUIZ_ANSWER1:
-                    removeButtons(chatId, messageId);
+                    removeMessage(chatId, messageId);
                     return quizService.checkQuizAnswer(user, 1);
                 case QUIZ_ANSWER2:
-                    removeButtons(chatId, messageId);
+                    removeMessage(chatId, messageId);
                     return quizService.checkQuizAnswer(user, 2);
                 case QUIZ_ANSWER3:
-                    removeButtons(chatId, messageId);
+                    removeMessage(chatId, messageId);
                     return quizService.checkQuizAnswer(user, 3);
                 case WELCOME_BELIEVE:
                     if (user.getBelieveQuestionId() == 3
@@ -118,20 +119,21 @@ public class TelegramDemoBot extends TelegramWebhookBot {
                         return believeButtons.getButtonsForLaterQuestion(user, false);
                     }
                     if (user.getBelieveQuestionId() == -1) {
-                        removeMessage(chatId, messageId);
-                        return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("Спасибо за игру! Ваш результат %d из %d!", user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
+                        return new SendMessage(chatId.toString(),
+                                String.format("Спасибо за игру! Ваш результат %d из %d!",
+                                        user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
                     }
                     removeButtons(chatId, messageId);
                     return believeButtons.getInitActivityButtons(chatId);
                 case BELIEVE_INIT:
                     removeButtons(chatId, messageId);
-                    return believeButtons.getBelieveQuestion(user, true);
+                    return believeButtons.getBelieveQuestion(user);
                 case BELIEVE_TRUE:
-                    removeButtons(chatId, messageId);
-                    return believeButtons.checkAnswer(user, true);
+                    removeMessage(chatId, messageId);
+                    return checkBelieveMessage(user, chatId, true);
                 case BELIEVE_FALSE:
-                    removeButtons(chatId, messageId);
-                    return believeButtons.checkAnswer(user, false);
+                    removeMessage(chatId, messageId);
+                    return checkBelieveMessage(user, chatId, false);
                 case WELCOME_VOTE:
                     if (user.getVoteCounted()) {
                         removeButtons(chatId, messageId);
@@ -189,6 +191,14 @@ public class TelegramDemoBot extends TelegramWebhookBot {
             }
         }
         return null;
+    }
+
+    private SendMessage checkBelieveMessage(ChatUser user, Long chatId, boolean answer) {
+        boolean answeredInTime = System.currentTimeMillis() - user.getBelieveQuestionAskedTimestamp() < 15000;
+        if (!answeredInTime) {
+            sendMessageToChat(new SendMessage(chatId.toString(), "Прошло больше 15 секунд, вы не успели с ответом"));
+        }
+        return believeButtons.checkAnswer(user, true, answeredInTime);
     }
 
     private void removeButtons(Long chatId, Integer messageId) {

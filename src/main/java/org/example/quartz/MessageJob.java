@@ -34,7 +34,7 @@ public class MessageJob implements Job {
                         .build());
                 break;
             case JOB_ACTION:
-                telegramDemoBot.sendMessageToChat(believeButtons.getBelieveQuestion(user, true));
+                telegramDemoBot.sendMessageToChat(believeButtons.getBelieveQuestion(user));
                 user.setBelieveQuestionScheduled(false);
                 break;
             default:

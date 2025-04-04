@@ -92,7 +92,8 @@ public class TelegramDemoBot extends TelegramWebhookBot {
                 case WELCOME_QUIZ:
                     if (user.getQuizQuestionId() == -1) {
                         return new SendMessage(chatId.toString(),
-                                String.format("Спасибо за игру! Ваш результат %d из %d!",
+                                String.format("🎉 Спасибо за участие в квизе! Твой результат %d из %d!\n" +
+                                                "Подарки вручаем на стенде ТестОпс за 12 правильных ответов 🤓",
                                         user.getQuizScore(), questionLoader.getQuizQuestions().size()));
                     }
                     removeButtons(chatId, messageId);
@@ -120,7 +121,8 @@ public class TelegramDemoBot extends TelegramWebhookBot {
                     }
                     if (user.getBelieveQuestionId() == -1) {
                         return new SendMessage(chatId.toString(),
-                                String.format("Спасибо за игру! Ваш результат %d из %d!",
+                                String.format("Спасибо за участие в игре Верю не Верю! Твоя интуиция справилась на %d из %d! ⭐️\n" +
+                                                "Подарки вручаем на стенде ТестОпс за 6 правильных ответов 🤓",
                                         user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
                     }
                     removeButtons(chatId, messageId);
@@ -140,7 +142,7 @@ public class TelegramDemoBot extends TelegramWebhookBot {
                         return voteService.getVotedMessage(user);
                     }
                     removeButtons(chatId, messageId);
-                    sendMessageToChat(new SendMessage(chatId.toString(), "Привет! Голосуй за фичи, влияй на роадмап! Вы можете выбрать до 3 пунктов."));
+                    sendMessageToChat(new SendMessage(chatId.toString(), "Голосуй за направления развития TMS ТестОпc! Можно выбрать от 1 до 3 пунктов."));
                     return voteService.getTestOpsUserButtons(chatId);
                 case VOTE_TESTOPS_USER:
                     user.setTestOpsUser(true);
@@ -196,7 +198,8 @@ public class TelegramDemoBot extends TelegramWebhookBot {
     private SendMessage checkBelieveMessage(ChatUser user, Long chatId, boolean answer) {
         boolean answeredInTime = System.currentTimeMillis() - user.getBelieveQuestionAskedTimestamp() < 15000;
         if (!answeredInTime) {
-            sendMessageToChat(new SendMessage(chatId.toString(), "Прошло больше 15 секунд, вы не успели с ответом"));
+            sendMessageToChat(new SendMessage(chatId.toString(),
+                    "Ой, время вышло! ⏳ Не переживай, впереди ещё много интересного! Не мешкай и лови следующий факт!"));
         }
         return believeButtons.checkAnswer(user, true, answeredInTime);
     }

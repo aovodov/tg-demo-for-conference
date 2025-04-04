@@ -17,9 +17,9 @@ public class WelcomeButtons {
     public static SendMessage getWelcomeButtons(Long chatId, String messageText) {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 
-        rowsInline.add(List.of(addInlineButton("😒 Квиз", WELCOME_QUIZ, null)));
-        rowsInline.add(List.of(addInlineButton("❤️ Верю - не верю", WELCOME_BELIEVE, null)));
-        rowsInline.add(List.of(addInlineButton("👌🏾 Голосование за фичи", WELCOME_VOTE, null)));
+        rowsInline.add(List.of(addInlineButton("Квиз", WELCOME_QUIZ, null)));
+        rowsInline.add(List.of(addInlineButton("Верю не Верю", WELCOME_BELIEVE, null)));
+        rowsInline.add(List.of(addInlineButton("Развитие ТестОпс", WELCOME_VOTE, null)));
         rowsInline.add(List.of(addSubscribeButton()));
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();

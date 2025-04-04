@@ -65,7 +65,10 @@ public class BelieveService {
             return getButtonsForLaterQuestion(user, false);
         }
         if (user.getBelieveQuestionId() == -1) {
-            return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("Спасибо за игру! Ваш результат %d из %d!", user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
+            return WelcomeButtons.getWelcomeButtons(user.getChatId(),
+                    String.format("Спасибо за участие в игре Верю не Верю! Твоя интуиция справилась на %d из %d! ⭐️\n" +
+                                    "Подарки вручаем на стенде ТестОпс за 6 правильных ответов 🤓",
+                            user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
         }
         if (user.getBelieveQuestionAskedTimestamp() == 0)
             log.error("ACHTUNG!!!! user.getBelieveQuestionAskedTimestamp() == 0");
@@ -85,7 +88,10 @@ public class BelieveService {
         if (user.getBelieveQuestionId() == questionLoader.getBelieveQuestions().size()) {
             user.setBelieveQuestionId(-1);
             chatUserRepository.save(user);
-            return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("Спасибо за игру! Ваш результат %d из %d!", user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
+            return WelcomeButtons.getWelcomeButtons(user.getChatId(),
+                    String.format("Спасибо за участие в игре Верю не Верю! Твоя интуиция справилась на %d из %d! ⭐️\n" +
+                                    "Подарки вручаем на стенде ТестОпс за 6 правильных ответов 🤓",
+                            user.getBelieveScore(), questionLoader.getBelieveQuestions().size()));
         }
         return getBelieveQuestion(user);
     }
@@ -105,11 +111,18 @@ public class BelieveService {
         inlineKeyboardMarkup.setKeyboard(rowsInline);
         SendMessage message = new SendMessage();
         message.setChatId(user.getChatId());
-        String text = String.format("Ваш результат %d из %d!", user.getBelieveScore(), user.getBelieveQuestionId());
-        if (showTime) {
-            text += " Следующий раунд через час!";
+        String text;
+        if (user.getBelieveQuestionId() == 3) {
+            text = "Первый раунд завершен! Твой результат %d из %d ⭐\n" +
+                    "Впереди еще 6 фактов. Поймай удачу за хвост! Продолжим следующий раунд через час!";
+        } else if (user.getBelieveQuestionId() == 6) {
+            text = "Второй раунд завершен! Твой результат %d из %d ⭐\n" +
+                    "Впереди еще 3 факта. Поймай удачу за хвост! Продолжим следующий раунд через час!";
+        } else {
+            text = "Спасибо за участие в игре Верю не Верю! Твоя интуиция справилась на %d из %d ⭐" +
+                    "Подарки вручаем на стенде ТестОпс за 6 правильных ответов 🤓";
         }
-        message.setText(text);
+        message.setText(String.format(text, user.getBelieveScore(), user.getBelieveQuestionId()));
         message.setReplyMarkup(inlineKeyboardMarkup);
         return message;
     }

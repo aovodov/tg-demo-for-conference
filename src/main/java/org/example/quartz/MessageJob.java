@@ -30,10 +30,19 @@ public class MessageJob implements Job {
             case JOB_INFO:
                 telegramDemoBot.sendMessageToChat(SendMessage.builder()
                         .chatId(chatId.toString())
-                        .text("⏰ Старт второго раунда через 10 минут!\n")
+                        .text(
+                                user.getBelieveQuestionId() == 3
+                                        ? "\u203C Старт второго раунда через 10 минут! Будь на связи, не забывай — всего 15 секунд на ответ."
+                                        : "\u203C Старт третьего раунда через 10 минут! Будь на связи, не забывай — всего 15 секунд на ответ."
+                        )
                         .build());
                 break;
             case JOB_ACTION:
+                telegramDemoBot.sendMessageToChat(SendMessage.builder().chatId(user.getChatId()).text(
+                        user.getBelieveQuestionId() == 3
+                                ? "⚡️ Начинаем второй раунд! Удачи!"
+                                : "⚡️ Начинаем третий раунд! Удачи!"
+                ).build());
                 telegramDemoBot.sendMessageToChat(believeButtons.getBelieveQuestion(user));
                 user.setBelieveQuestionScheduled(false);
                 break;

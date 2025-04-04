@@ -46,6 +46,6 @@ public class ButtonUtils {
     }
 
     public static InlineKeyboardButton addSubscribeButton() {
-        return addInlineButton("💕 Телеграм-канал ТестОпс", "button4", "https://t.me/+7DIrNVa1aJ05ZjUy");
+        return addInlineButton("Telegram-канал ТестОпс", "button4", "https://t.me/+7DIrNVa1aJ05ZjUy");
     }
 }

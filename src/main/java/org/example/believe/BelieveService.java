@@ -101,8 +101,8 @@ public class BelieveService {
     }
 
     private void scheduleSending(Long chatId) {
-        messageSchedulerService.scheduleMessage(chatId, JOB_INFO, LocalDateTime.now().plusSeconds(15));
-        messageSchedulerService.scheduleMessage(chatId, JOB_ACTION, LocalDateTime.now().plusSeconds(30));
+        messageSchedulerService.scheduleMessage(chatId, JOB_INFO, LocalDateTime.now().plusMinutes(50));
+        messageSchedulerService.scheduleMessage(chatId, JOB_ACTION, LocalDateTime.now().plusMinutes(60));
     }
 
     public SendMessage getButtonsForLaterQuestion(ChatUser user, boolean showTime) {

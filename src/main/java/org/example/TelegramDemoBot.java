@@ -93,7 +93,7 @@ public class TelegramDemoBot extends TelegramWebhookBot {
                     if (user.getQuizQuestionId() == -1) {
                         return new SendMessage(chatId.toString(),
                                 String.format("🎉 Спасибо за участие в квизе! Твой результат %d из %d!\n" +
-                                                "Подарки вручаем на стенде ТестОпс за 12 правильных ответов 🤓",
+                                                "Подарки вручаем на стенде ТестОпс за 13 правильных ответов 🤓",
                                         user.getQuizScore(), questionLoader.getQuizQuestions().size()));
                     }
                     removeButtons(chatId, messageId);

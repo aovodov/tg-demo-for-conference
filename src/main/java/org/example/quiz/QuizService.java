@@ -51,7 +51,7 @@ public class QuizService {
     public SendMessage checkQuizAnswer(ChatUser user, int answer) {
         if (user.getQuizQuestionId() == -1) {
             return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("🎉 Спасибо за участие в квизе! Твой результат %d из %d!\n" +
-                    "Подарки вручаем на стенде ТестОпс за 12 правильных ответов 🤓", user.getQuizScore(), questionLoader.getQuizQuestions().size()));
+                    "Подарки вручаем на стенде ТестОпс за 13 правильных ответов 🤓", user.getQuizScore(), questionLoader.getQuizQuestions().size()));
         }
         if (questionLoader.getQuizQuestions().get(user.getQuizQuestionId()).correctAnswer() == answer) {
             user.setQuizScore(user.getQuizScore() + 1);
@@ -61,7 +61,7 @@ public class QuizService {
             user.setQuizQuestionId(-1);
             chatUserRepository.save(user);
             return WelcomeButtons.getWelcomeButtons(user.getChatId(), String.format("🎉 Спасибо за участие в квизе! Твой результат %d из %d!\n" +
-                    "Подарки вручаем на стенде ТестОпс за 12 правильных ответов 🤓", user.getQuizScore(), questionLoader.getQuizQuestions().size()));
+                    "Подарки вручаем на стенде ТестОпс за 13 правильных ответов 🤓", user.getQuizScore(), questionLoader.getQuizQuestions().size()));
         }
         return getQuizQuestion(user);
     }
@@ -69,6 +69,6 @@ public class QuizService {
     public SendMessage getInitActivityButtons(Long chatId) {
         return ButtonUtils.getInitActivityButtons(chatId, "✅ Начать", QUIZ_INIT,
                 "Квиз на эрудицию: тестирование и общие IT-факты.\n" +
-                        "Отвечай на вопросы и забирай мерч от ТестОпс. Нужно минимум 12 правильных ответов 🤓");
+                        "Отвечай на вопросы и забирай мерч от ТестОпс. Нужно минимум 13 правильных ответов 🤓");
     }
 }

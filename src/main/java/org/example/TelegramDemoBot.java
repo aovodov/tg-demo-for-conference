@@ -201,7 +201,7 @@ public class TelegramDemoBot extends TelegramWebhookBot {
             sendMessageToChat(new SendMessage(chatId.toString(),
                     "Ой, время вышло! ⏳ Не переживай, впереди ещё много интересного! Не мешкай и лови следующий факт!"));
         }
-        return believeButtons.checkAnswer(user, true, answeredInTime);
+        return believeButtons.checkAnswer(user, answer, answeredInTime);
     }
 
     private void removeButtons(Long chatId, Integer messageId) {

@@ -27,7 +27,10 @@ public class WelcomeButtons {
 
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
-        message.setText("Привет, это Тестопс Бот! Чтобы начать, выбери активность");
+        message.setText("""
+                Привет, это ТестОпс Бот!
+                
+                Я готов к работе. Выберите активность.""");
         if (messageText != null) {
             message.setText(messageText);
         }
